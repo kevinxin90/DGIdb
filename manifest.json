@@ -1,6 +1,6 @@
 {
     "version": "0.1",
-    "requires" : ["pandas"],
+    "requires" : ["biothings"],
     "dumper": {
         "data_url": ["http://dgidb.org/data/interactions.tsv"],
         "uncompress": false
