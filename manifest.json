@@ -1,6 +1,6 @@
 {
     "version": "0.1",
-    "requires" : ["biothings"],
+    "requires" : ["biothings", "pyyaml"],
     "dumper": {
         "data_url": ["http://dgidb.org/data/interactions.tsv"],
         "uncompress": false
