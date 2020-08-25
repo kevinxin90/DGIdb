@@ -16,7 +16,7 @@ import yaml
 5 | drug_claim_name          |
 6 | drug_claim_primary_name  |
 7 | drug_name                | object.name
-8 | drug_chembl_id           | object.CHEMBL.COMPOUND
+8 | drug_chembl_id           | object.CHEMBL_COMPOUND
 9 | PMIDs                    | association.pubmed
 """
 
@@ -103,7 +103,7 @@ def load_annotations(data_folder):
         else:
             object_id = drug_chembl_id
         doc['object']['name'] = drug_name
-        doc['object']['CHEMBL.COMPOUND'] = drug_chembl_id
+        doc['object']['CHEMBL_COMPOUND'] = drug_chembl_id
         doc['object']['id'] = object_id
 
         # Association
