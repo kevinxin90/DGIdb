@@ -26,15 +26,13 @@ def load_annotations(data_folder):
     data = tabfile_feeder(data_file, header=0)
     header = next(data)
 
-    map_url = ("https://raw.githubusercontent.com/RTXteam/RTX/master/"
-               "code/kg2/predicate-remap.yaml")
-    mapfile = requests.get(map_url).text
+    mapfile = open(os.path.join(data_folder, "predicate-remap.yaml"), 'r').read()
+    remappingdata = yaml.safe_load(mapfile)
 
     def get_predicate(relation):
         if relation != "":
-            data = yaml.safe_load(mapfile)
             key = ':'.join(("DGIdb", relation))
-            return data[key]['rename'][0]
+            return remappingdata[key]['rename'][0]
         return ""
 
     def get_gene_id(gene_name):
