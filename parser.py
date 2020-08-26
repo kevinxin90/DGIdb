@@ -26,7 +26,8 @@ def load_annotations(data_folder):
     data = tabfile_feeder(data_file, header=0)
     header = next(data)
 
-    mapfile = open(os.path.join(data_folder, "predicate-remap.yaml"), 'r').read()
+    mapfile = open(os.path.join(
+        data_folder, "predicate-remap.yaml"), 'r').read()
     remappingdata = yaml.safe_load(mapfile)
 
     def get_predicate(relation):
@@ -64,11 +65,11 @@ def load_annotations(data_folder):
 
         # Document framework
         doc = {
-                "_id": hashstr,
-                "subject": {},
-                "object": {},
-                "association": {}
-                }
+            "_id": hashstr,
+            "subject": {},
+            "object": {},
+            "association": {}
+        }
 
         # Subject
         entrez_id = rec[header.index("entrez_id")]
@@ -78,12 +79,12 @@ def load_annotations(data_folder):
                 continue  # Skip the record
             resp = get_gene_id(gene_name)
             if resp is None:
-                subject_id = gene_name
+                subject_id = 'name:' + gene_name
             else:
                 entrez_id = resp
-                subject_id = resp
+                subject_id = 'NCBIGene:' + resp
         else:
-            subject_id = entrez_id
+            subject_id = 'NCBIGene:' + entrez_id
         doc['subject']['NCBIGene'] = entrez_id
         doc['subject']['SYMBOL'] = gene_name
         doc['subject']['id'] = subject_id
@@ -96,29 +97,31 @@ def load_annotations(data_folder):
                 continue  # Skip the record
             resp = get_chem_id(drug_name)
             if resp is None:
-                object_id = drug_name
+                object_id = 'name:' + drug_name
             else:
                 drug_chembl_id = resp
-                object_id = resp
+                object_id = 'CHEMBL.COMPOUND:' + resp
         else:
-            object_id = drug_chembl_id
+            object_id = 'CHEMBL.COMPOUND:' + drug_chembl_id
         doc['object']['name'] = drug_name
         doc['object']['CHEMBL_COMPOUND'] = drug_chembl_id
         doc['object']['id'] = object_id
 
         # Association
         interaction_types = rec[header.index("interaction_types")].replace(
-                " ", "_").split(",")
+            " ", "_").split(",")
         pmids = rec[header.index("PMIDs")].split(",")
-        interaction_claim_source = rec[header.index("interaction_claim_source")]
+        interaction_claim_source = rec[header.index(
+            "interaction_claim_source")]
         edge_labels = []
         for interaction in interaction_types:
             edge_labels.append(get_predicate(interaction))
+        if edge_labels == ['']:
+            edge_labels = 'physically_interacts_with'
         doc['association']['edge_label'] = edge_labels
         doc['association']['relation_name'] = interaction_types
         doc['association']['pubmed'] = pmids
         doc['association']['provided_by'] = interaction_claim_source
-
         # Cleanup
         doc = dict_sweep(doc)
         doc = unlist(doc)
