@@ -2,7 +2,7 @@
     "version": "0.1",
     "requires" : ["biothings", "pyyaml"],
     "dumper": {
-        "data_url": ["http://dgidb.org/data/interactions.tsv",
+        "data_url": ["http://dgidb.org/downloads/interactions.tsv",
                      "https://raw.githubusercontent.com/RTXteam/RTX/master/code/kg2/predicate-remap.yaml"],
         "uncompress": false,
         "release": "version:get_release"
