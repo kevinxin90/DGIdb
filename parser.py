@@ -16,7 +16,7 @@ import yaml
 5 | drug_claim_name          |
 6 | drug_claim_primary_name  |
 7 | drug_name                | object.name
-8 | drug_chembl_id           | object.CHEMBL_COMPOUND
+8 | drug_concept_id          | object.CHEMBL_COMPOUND
 9 | PMIDs                    | association.pubmed
 """
 
@@ -90,20 +90,20 @@ def load_annotations(data_folder):
 
         # Object
         drug_name = rec[header.index("drug_name")]
-        drug_chembl_id = rec[header.index("drug_chembl_id")]
-        if drug_chembl_id == "":
+        drug_concept_id = rec[header.index("drug_concept_id")]
+        if drug_concept_id == "":
             if drug_name == "":
                 continue  # Skip the record
             resp = get_chem_id(drug_name)
             if resp is None:
                 object_id = drug_name
             else:
-                drug_chembl_id = resp
+                drug_concept_id = resp
                 object_id = resp
         else:
-            object_id = drug_chembl_id
+            object_id = drug_concept_id
         doc['object']['name'] = drug_name
-        doc['object']['CHEMBL_COMPOUND'] = drug_chembl_id
+        doc['object']['CHEMBL_COMPOUND'] = drug_concept_id
         doc['object']['id'] = object_id
 
         # Association
