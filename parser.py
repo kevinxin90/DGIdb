@@ -91,7 +91,7 @@ def load_annotations(data_folder):
 
         # Object
         drug_name = rec[header.index("drug_name")]
-        drug_chembl_id = rec[header.index("drug_chembl_id")]
+        drug_chembl_id = rec[header.index("drug_concept_id")]
         if drug_chembl_id == "":
             if drug_name == "":
                 continue  # Skip the record
@@ -101,8 +101,9 @@ def load_annotations(data_folder):
             else:
                 drug_chembl_id = resp
                 object_id = 'CHEMBL.COMPOUND:' + resp
-        else:
-            object_id = 'CHEMBL.COMPOUND:' + drug_chembl_id
+        else if drug_chembl_id.startswith("chembl:"):
+            object_id = 'CHEMBL.COMPOUND:' + drug_chembl_id.split(':')[-1]
+            drug_chembl_id = 'CHEMBL.COMPOUND:' + drug_chembl_id.split(':')[-1]
         doc['object']['name'] = drug_name
         doc['object']['CHEMBL_COMPOUND'] = drug_chembl_id
         doc['object']['id'] = object_id
@@ -122,6 +123,8 @@ def load_annotations(data_folder):
         doc['association']['relation_name'] = interaction_types
         doc['association']['pubmed'] = pmids
         doc['association']['provided_by'] = interaction_claim_source
+        doc['association']['interaction_group_score'] = rec[header.index(
+            "interaction_group_score")]
         # Cleanup
         doc = dict_sweep(doc)
         doc = unlist(doc)
