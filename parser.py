@@ -101,7 +101,7 @@ def load_annotations(data_folder):
             else:
                 drug_chembl_id = resp
                 object_id = 'CHEMBL.COMPOUND:' + resp
-        else if drug_chembl_id.startswith("chembl:"):
+        elif drug_chembl_id.startswith("chembl:"):
             object_id = 'CHEMBL.COMPOUND:' + drug_chembl_id.split(':')[-1]
             drug_chembl_id = 'CHEMBL.COMPOUND:' + drug_chembl_id.split(':')[-1]
         doc['object']['name'] = drug_name
